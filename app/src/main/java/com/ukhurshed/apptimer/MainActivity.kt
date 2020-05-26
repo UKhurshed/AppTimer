@@ -4,18 +4,20 @@ import android.annotation.SuppressLint
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
 import android.provider.Settings
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-
+import com.github.mikephil.charting.charts.PieChart
 
 class MainActivity : AppCompatActivity() {
+    lateinit var pieChart: PieChart
+
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             AppOpsManager.OPSTR_GET_USAGE_STATS,
             Process.myUid(), packageName
         )
-        if (mode != AppOpsManager.MODE_ALLOWED){
+        if (mode != AppOpsManager.MODE_ALLOWED) {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             startActivity(intent)
         }
@@ -33,24 +35,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val stats = mutableListOf<String>()
-        createPeriodSelector(stats)
-        createAppUsagesView(stats)
+        createPie()
+
+        createPeriodSelector()
     }
 
-    private fun createPeriodSelector(stats: MutableList<String>) {
+    private fun createPeriodSelector() {
         val spinner = findViewById<Spinner>(R.id.spinner)
         val items = listOf("day", "week", "month")
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, items)
         spinner.adapter = spinnerAdapter
-        spinner.onItemSelectedListener = SpinnerListener(this, stats, findViewById(R.id.listView))
+        spinner.onItemSelectedListener = SpinnerListener(this, findViewById(R.id.pieChart))
     }
 
-    private fun createAppUsagesView(stats: MutableList<String>) {
-        val listView = findViewById<ListView>(R.id.listView)
+    private fun createPie() {
+        pieChart = findViewById(R.id.pieChart)
+        pieChart.setExtraOffsets(5F, 10F, 5F, 5F)
 
-        val listViewAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, stats)
-        listView.adapter = listViewAdapter
+        pieChart.dragDecelerationFrictionCoef = 0.95F
+
+        pieChart.isDrawHoleEnabled = true
+        pieChart.setHoleColor(Color.WHITE)
+        pieChart.transparentCircleRadius = 61F
     }
 }
 

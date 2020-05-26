@@ -12,7 +12,7 @@ import java.util.*
 import kotlin.math.abs
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getAppUsages(context: Context, interval: Int): List<String> {
+fun getAppUsages(context: Context, interval: Int): List<Pair<Float, String>> {
     val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
 
     val starOfDay = getStartOfDay()
@@ -25,20 +25,20 @@ fun getAppUsages(context: Context, interval: Int): List<String> {
         .mapNotNull { stat -> getAppUsage(context, stat) }
 }
 
-fun getAppUsage(context: Context, usageStats: UsageStats): String? {
+private fun getAppUsage(context: Context, usageStats: UsageStats): Pair<Float, String>? {
     return try {
         val info = context.packageManager.getApplicationInfo(usageStats.packageName, 0)
-        val label = context.packageManager.getApplicationLabel(info)
-        val time = usageStats.totalTimeInForeground / 1000.0 / 60 / 60
+        val label = context.packageManager.getApplicationLabel(info).toString()
+        val time = (usageStats.totalTimeInForeground / 1000.0 / 60 / 60).toFloat()
         if (abs(time - 0.0) < 0.1) null else
-            "$label ${String.format("%.1f h", time)}"
+            time to label
     } catch (e: PackageManager.NameNotFoundException) {
         null
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getStartOfDay(): Long {
+private fun getStartOfDay(): Long {
     val date = Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000
 }
