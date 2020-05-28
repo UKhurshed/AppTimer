@@ -1,4 +1,4 @@
-package com.ukhurshed.apptimer
+package com.ukhurshed.apptimer.Activities
 
 import android.annotation.SuppressLint
 import android.app.AppOpsManager
@@ -11,11 +11,12 @@ import android.os.Process
 import android.provider.Settings
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.Toolbar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.PieChart
+import com.ukhurshed.apptimer.R
+import com.ukhurshed.apptimer.SpinnerListener
 import kotlinx.android.synthetic.main.main_toolbar.*
 
 class MainActivity : AppCompatActivity() {
@@ -50,7 +51,10 @@ class MainActivity : AppCompatActivity() {
         val items = listOf("day", "week", "month")
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, items)
         spinner.adapter = spinnerAdapter
-        spinner.onItemSelectedListener = SpinnerListener(this, findViewById(R.id.pieChart))
+        spinner.onItemSelectedListener = SpinnerListener(
+            this,
+            findViewById(R.id.pieChart)
+        )
     }
 
     private fun createPie() {
