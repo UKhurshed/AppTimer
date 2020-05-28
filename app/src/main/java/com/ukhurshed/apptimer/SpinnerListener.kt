@@ -26,7 +26,7 @@ class SpinnerListener(private val context: Context, private val pieChart: PieCha
 
         pieDataSet.sliceSpace = 3F
         pieDataSet.selectionShift = 5F
-        pieDataSet.colors = ColorTemplate.JOYFUL_COLORS.toList()
+        pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
 
         val pieData = PieData(pieDataSet)
         pieData.setValueTextSize(10F)
