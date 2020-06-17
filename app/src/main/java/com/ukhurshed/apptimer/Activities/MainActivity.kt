@@ -4,19 +4,18 @@ import android.annotation.SuppressLint
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
 import android.provider.Settings
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.PieChart
+import com.ukhurshed.apptimer.Fragments.BarChartFragment
+import com.ukhurshed.apptimer.Fragments.FragmentPieChart
 import com.ukhurshed.apptimer.R
-import com.ukhurshed.apptimer.SpinnerListener
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_toolbar.*
 
 class MainActivity : AppCompatActivity() {
@@ -41,31 +40,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createPie()
+        val pieChartFragment = FragmentPieChart()
+        val barChartFragment = BarChartFragment()
 
-        createPeriodSelector()
+        bottomNavigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.pieChart -> makeCurrentFragment(pieChartFragment)
+                R.id.barChart -> makeCurrentFragment(barChartFragment)
+            }
+            true
+        }
     }
 
-    private fun createPeriodSelector() {
-        val spinner = findViewById<Spinner>(R.id.spinner)
-        val items = listOf("day", "week", "month")
-        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, items)
-        spinner.adapter = spinnerAdapter
-        spinner.onItemSelectedListener = SpinnerListener(
-            this,
-            findViewById(R.id.pieChart)
-        )
+    private fun makeCurrentFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragmentHome, fragment)
+            commit()
+        }
     }
 
-    private fun createPie() {
-        pieChart = findViewById(R.id.pieChart)
-        pieChart.setExtraOffsets(5F, 10F, 5F, 5F)
 
-        pieChart.dragDecelerationFrictionCoef = 0.95F
-
-        pieChart.isDrawHoleEnabled = true
-        pieChart.setHoleColor(Color.WHITE)
-        pieChart.transparentCircleRadius = 61F
-    }
 }
 

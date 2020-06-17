@@ -1,4 +1,4 @@
-package com.ukhurshed.apptimer
+package com.ukhurshed.apptimer.PieChart
 
 import android.content.Context
 import android.graphics.Color
@@ -12,14 +12,17 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 
-class SpinnerListener(private val context: Context, private val pieChart: PieChart) :
+class PieChartSpinnerListener(private val context: Context, private val pieChart: PieChart) :
     AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val stats = getAppUsages(context, position)
+        val stats = getAppUsages(
+            context,
+            position
+        )
 
         val entries = stats.map { stat -> PieEntry(stat.first, stat.second) }
         val pieDataSet = PieDataSet(entries, "apps")

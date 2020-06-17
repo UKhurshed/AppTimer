@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">AppTimer</string>
     <string name="toolbar_title">AppTimer</string>
+    <string name="home_menu">Home</string>
+    <string name="pieChart">Pie Chart</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bar_chart">Bar Chart</string>
 </resources>

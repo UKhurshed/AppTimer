@@ -1,4 +1,4 @@
-package com.ukhurshed.apptimer
+package com.ukhurshed.apptimer.PieChart
 
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
@@ -22,14 +22,19 @@ fun getAppUsages(context: Context, interval: Int): List<Pair<Float, String>> {
 
     return usageStatsList
         .sortedByDescending { stat -> stat.totalTimeInForeground }
-        .mapNotNull { stat -> getAppUsage(context, stat) }
+        .mapNotNull { stat ->
+            getAppUsage(
+                context,
+                stat
+            )
+        }
 }
 
 private fun getAppUsage(context: Context, usageStats: UsageStats): Pair<Float, String>? {
     return try {
         val info = context.packageManager.getApplicationInfo(usageStats.packageName, 0)
         val label = context.packageManager.getApplicationLabel(info).toString()
-        val time = (usageStats.totalTimeInForeground / 1000.0 / 60 / 60).toFloat()
+        val time = (usageStats.totalTimeInForeground / 1000.0 / 60).toFloat()
         if (abs(time - 0.0) < 0.1) null else
             time to label
     } catch (e: PackageManager.NameNotFoundException) {
